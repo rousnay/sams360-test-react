@@ -26,7 +26,7 @@ export async function uploadFileToS3({
   }
 
   const { data } = await uploadUrlRes.json();
-  const { id, uploadUrl } = data;
+  const { uploadUrl } = data;
 
   // Step 2: Upload to S3
   const s3Res = await fetch(uploadUrl, {
@@ -42,24 +42,24 @@ export async function uploadFileToS3({
   }
 
   // Step 3: Confirm Upload
-  const confirmRes = await fetch(
-    `${backendBaseUrl}/files/${id}/confirm-upload`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
+  // const confirmRes = await fetch(
+  //   `${backendBaseUrl}/files/${id}/confirm-upload`,
+  //   {
+  //     method: "POST",
+  //     headers: {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     },
+  //   }
+  // );
 
-  if (!confirmRes.ok) {
-    throw new Error("Failed to confirm upload");
-  }
+  // if (!confirmRes.ok) {
+  //   throw new Error("Failed to confirm upload");
+  // }
 
-  console.log("✅ Upload complete:", id);
+  // console.log("✅ Upload complete:", id);
 
-  return {
-    fileId: id,
-    storageKey: uploadUrl.split("?")[0], // optional
-  };
+  // return {
+  //   fileId: id,
+  //   storageKey: uploadUrl.split("?")[0], // optional
+  // };
 }

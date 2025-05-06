@@ -1,19 +1,26 @@
 import React, { useState } from "react";
 
 export default function MultiUpload() {
-  const [files, setFiles] = useState([]);
   const [status, setStatus] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const baseUrl = localStorage.getItem("api_base_url");
   const accessToken = localStorage.getItem("access_token");
 
-  const handleFilesUpload = async () => {
-    const uploadedIds = [];
+  const handleFileSelect = async (event) => {
+    const selectedFiles = Array.from(event.target.files);
+    for (const file of selectedFiles) {
+      await uploadFile(file);
+    }
+  };
 
-    for (const file of files) {
-      try {
-        setStatus(`📡 Getting upload URL for ${file.name}...`);
-        const res = await fetch(`${baseUrl}/files/get-upload-url`, {
+  const uploadFile = async (file) => {
+    setStatus(`📡 Getting upload URL for: ${file.name}`);
+
+    try {
+      const res = await fetch(
+        `${baseUrl}/core-platform/storage/get-upload-url`,
+        {
           method: "POST",
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -23,42 +30,51 @@ export default function MultiUpload() {
             file_name: file.name,
             content_type: file.type,
             file_size: file.size,
-            file_purpose: "multi_upload",
+            file_purpose: "due_diligence_doc",
           }),
-        });
+        }
+      );
 
-        const json = await res.json();
-        const { id, uploadUrl } = json.data;
+      const json = await res.json();
+      const { id, uploadUrl } = json.data;
 
-        setStatus(`⬆️ Uploading ${file.name}...`);
-        const uploadRes = await fetch(uploadUrl, {
-          method: "PUT",
-          headers: { "Content-Type": file.type },
-          body: file,
-        });
+      setStatus(`⬆️ Uploading ${file.name}...`);
+      const uploadRes = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
 
-        if (!uploadRes.ok) throw new Error("Upload failed");
-        uploadedIds.push(id);
-      } catch (err) {
-        console.error(err);
-        setStatus(`❌ Upload failed for ${file.name}`);
-        return;
-      }
+      if (!uploadRes.ok) throw new Error("S3 upload failed");
+
+      setUploadedFiles((prev) => [...prev, { id, name: file.name }]);
+      setStatus(`✅ ${file.name} uploaded!`);
+    } catch (error) {
+      console.error(error);
+      setStatus(`❌ Failed to upload ${file.name}`);
     }
-
-    setStatus(`✅ All ${uploadedIds.length} files uploaded successfully!`);
   };
 
   return (
-    <div>
-      <h2>📁 Multiple File Upload</h2>
-      <input
-        type="file"
-        multiple
-        onChange={(e) => setFiles([...e.target.files])}
-      />
-      <button onClick={handleFilesUpload}>🚀 Upload All</button>
+    <div style={{ paddingTop: "10px" }}>
+      <h2>📤 Multi File Upload (Auto Upload)</h2>
+      <input type="file" multiple onChange={handleFileSelect} />
       <p>{status}</p>
+
+      {uploadedFiles.length > 0 && (
+        <div>
+          <h4>✅ Uploaded Files:</h4>
+          <ul>
+            {uploadedFiles.map((file) => (
+              <li key={file.id}>
+                {file.name} — <code>{file.id}</code>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

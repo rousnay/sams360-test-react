@@ -14,19 +14,22 @@ export default function SingleUpload() {
     setStatus(`📡 Requesting upload URL for ${file.name}...`);
 
     try {
-      const res = await fetch(`${baseUrl}/files/get-upload-url`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          file_name: file.name,
-          content_type: file.type,
-          file_size: file.size,
-          file_purpose: "single_upload",
-        }),
-      });
+      const res = await fetch(
+        `${baseUrl}/core-platform/storage/get-upload-url`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            file_name: file.name,
+            content_type: file.type,
+            file_size: file.size,
+            file_purpose: "due_diligence_doc",
+          }),
+        }
+      );
 
       const json = await res.json();
       const { id, uploadUrl } = json.data;

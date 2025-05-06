@@ -15,19 +15,22 @@ export default function MultiUploadWithForm() {
       setStatus(`📡 Getting upload URL for ${file.name}...`);
 
       try {
-        const res = await fetch(`${baseUrl}/files/get-upload-url`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            file_name: file.name,
-            content_type: file.type,
-            file_size: file.size,
-            file_purpose: "form_upload",
-          }),
-        });
+        const res = await fetch(
+          `${baseUrl}/core-platform/storage/get-upload-url`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              file_name: file.name,
+              content_type: file.type,
+              file_size: file.size,
+              file_purpose: "due_diligence_doc",
+            }),
+          }
+        );
 
         const json = await res.json();
         const { id, uploadUrl } = json.data;
@@ -53,18 +56,21 @@ export default function MultiUploadWithForm() {
 
     setStatus("📨 Submitting form...");
     try {
-      const formRes = await fetch(`${baseUrl}/files/form-uploads`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: form.title,
-          description: form.description,
-          file_ids: uploadedFileIds,
-        }),
-      });
+      const formRes = await fetch(
+        `${baseUrl}/core-platform/storage/form-uploads`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: form.title,
+            description: form.description,
+            file_ids: uploadedFileIds,
+          }),
+        }
+      );
 
       const final = await formRes.json();
       if (!formRes.ok)
