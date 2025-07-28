@@ -60,7 +60,26 @@ export default function App() {
           />
         </div>
 
-        <h3 style={{ marginTop: "30px" }}>🔌 WebSocket Settings</h3>
+        <br />
+        <nav>
+          <Link to="/" style={{ marginRight: "15px" }}>
+            Single Upload
+          </Link>
+          <Link to="/multi-upload" style={{ marginRight: "15px" }}>
+            Multi Upload
+          </Link>
+          <Link to="/multi-upload-form">Multi Upload + Form</Link>
+        </nav>
+
+        <Routes>
+          <Route path="/" element={<SingleUpload />} />
+          <Route path="/multi-upload" element={<MultiUpload />} />
+          <Route path="/multi-upload-form" element={<MultiUploadWithForm />} />
+        </Routes>
+
+        <hr />
+
+        <h2 style={{ marginTop: "30px" }}>🔌 WebSocket Settings</h2>
         <div>
           <label>User ID: </label>
           <input
@@ -97,24 +116,6 @@ export default function App() {
           userId={userId}
           manageAccountId={manageAccountId}
         />
-
-        <hr />
-
-        <nav>
-          <Link to="/" style={{ marginRight: "15px" }}>
-            Single Upload
-          </Link>
-          <Link to="/multi-upload" style={{ marginRight: "15px" }}>
-            Multi Upload
-          </Link>
-          <Link to="/multi-upload-form">Multi Upload + Form</Link>
-        </nav>
-
-        <Routes>
-          <Route path="/" element={<SingleUpload />} />
-          <Route path="/multi-upload" element={<MultiUpload />} />
-          <Route path="/multi-upload-form" element={<MultiUploadWithForm />} />
-        </Routes>
       </div>
     </Router>
   );

@@ -85,7 +85,7 @@ export default function MultiUploadWithForm() {
 
   return (
     <div>
-      <h2>📝 Upload Form with Multiple Files</h2>
+      <h3>📝 Upload Form with Multiple Files</h3>
 
       <div style={{ marginBottom: "10px" }}>
         <label>Title: </label>

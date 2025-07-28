@@ -52,7 +52,7 @@ export default function SingleUpload() {
 
   return (
     <div>
-      <h2>📤 Single File Upload</h2>
+      <h3>📤 Single File Upload</h3>
       <input type="file" onChange={handleFileSelect} />
       <p>{status}</p>
       {fileId && (

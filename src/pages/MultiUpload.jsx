@@ -59,7 +59,7 @@ export default function MultiUpload() {
 
   return (
     <div style={{ paddingTop: "10px" }}>
-      <h2>📤 Multi File Upload (Auto Upload)</h2>
+      <h3>📤 Multi File Upload (Auto Upload)</h3>
       <input type="file" multiple onChange={handleFileSelect} />
       <p>{status}</p>
 
