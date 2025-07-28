@@ -26,7 +26,7 @@ export default function SingleUpload() {
             file_name: file.name,
             content_type: file.type,
             file_size: file.size,
-            file_purpose: "due_diligence_doc",
+            file_purpose: "university_logo_img",
           }),
         }
       );
